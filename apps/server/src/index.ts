@@ -5,7 +5,9 @@ import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/node";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import cors from "cors";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 import express from "express";
+import { db } from "./db";
 import { createContext } from "./lib/context";
 import { appRouter } from "./routers";
 
@@ -78,6 +80,10 @@ app.get("/", (_req, res) => {
 });
 
 const port = process.env.PORT || 3000;
+
+// Run migrations on startup
+await migrate(db, { migrationsFolder: "./src/db/migrations" });
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
