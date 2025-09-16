@@ -7,7 +7,7 @@
     "dev": "vite --port=3001",
     "build": "vite build",
     "serve": "vite preview --port=3001",
-    "start": "vite --port=3001 --host --allowed-hosts *",
+    "start": "vite --port=3001 --host",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
