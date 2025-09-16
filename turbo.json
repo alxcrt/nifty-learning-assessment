@@ -53,7 +53,14 @@
 			"dependsOn": ["build"],
 			"cache": false,
 			"persistent": true,
-			"env": ["CORS_ORIGIN", "DATABASE_URL", "JWT_SECRET", "PORT", "NODE_ENV"]
+			"env": [
+				"CORS_ORIGIN",
+				"DATABASE_URL",
+				"JWT_SECRET",
+				"PORT",
+				"NODE_ENV",
+				"API_URL"
+			]
 		}
 	}
 }
