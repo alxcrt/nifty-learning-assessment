@@ -1,0 +1,21 @@
+[build]
+nixpkgs = "github:NixOS/nixpkgs/nixos-unstable"
+
+[providers]
+node.pkgs = ["nodejs_20", "bun", "python3"]
+
+[phases.build]
+cmds = [
+    "bun install",
+    "bun run build"
+]
+
+[phases.start]
+cmd = "bun run start"
+
+[start]
+cmd = "bun run start"
+
+[variables]
+NODE_ENV = "production"
+PORT = "3000"
