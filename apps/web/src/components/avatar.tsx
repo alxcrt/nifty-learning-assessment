@@ -15,14 +15,15 @@ export default function Avatar() {
 	const { logout } = useAuth();
 	const user = useUser();
 
-	const { setTheme } = useTheme();
 	const router = useRouter();
 
 	if (!user) {
 		return null;
 	}
 
-	const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=32`;
+	const initialsAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=32`;
+
+	const avatarUrl = `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent(user.name)}&size=32`;
 
 	return (
 		<DropdownMenu>
@@ -50,18 +51,6 @@ export default function Avatar() {
 						<span>Logout</span>
 					</DropdownMenuItem>
 				)}
-				<DropdownMenuItem onClick={() => setTheme("light")}>
-					<Sun className="mr-2 h-4 w-4" />
-					<span>Light</span>
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("dark")}>
-					<Moon className="mr-2 h-4 w-4" />
-					<span>Dark</span>
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("system")}>
-					<Computer className="mr-2 h-4 w-4" />
-					<span>System</span>
-				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
