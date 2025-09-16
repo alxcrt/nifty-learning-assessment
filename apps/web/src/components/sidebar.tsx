@@ -9,7 +9,7 @@ export function Sidebar() {
 	const currentPath = router.location.pathname;
 
 	return (
-		<aside className="fixed top-0 left-0 z-20 h-screen w-[90px] border-r bg-muted/50">
+		<aside className="fixed top-0 left-0 z-20 h-screen w-[90px] border-r bg-background">
 			<div className="relative flex h-full flex-col overflow-y-auto py-4">
 				<div className="mb-6 flex flex-col items-center gap-1">
 					<BrainCircuit className="h-6 w-6 text-muted-foreground/50" />
