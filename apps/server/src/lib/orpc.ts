@@ -24,7 +24,7 @@ const authMiddleware = oo.spec(
 		});
 	}),
 	{
-		security: [{ bearerAuth: [] }],
+		security: [{ BearerAuth: [] }],
 	},
 );
 

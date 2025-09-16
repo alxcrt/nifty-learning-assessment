@@ -40,9 +40,16 @@ const apiHandler = new OpenAPIHandler(appRouter, {
 					description:
 						"API documentation for the Nifty Learning Assessment application",
 				},
+				servers: process.env.API_URL
+					? [
+							{
+								url: `${process.env.API_URL}/api`,
+							},
+						]
+					: undefined,
 				components: {
 					securitySchemes: {
-						bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
+						BearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
 					},
 				},
 			},
