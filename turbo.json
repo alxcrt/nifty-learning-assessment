@@ -52,7 +52,8 @@
 		"start": {
 			"dependsOn": ["build"],
 			"cache": false,
-			"persistent": true
+			"persistent": true,
+			"env": ["CORS_ORIGIN", "DATABASE_URL", "JWT_SECRET", "PORT", "NODE_ENV"]
 		}
 	}
 }
