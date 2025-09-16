@@ -3,10 +3,12 @@ import { orpc } from "@/utils/orpc";
 import { useAuth } from "./useAuth";
 
 export function useUser() {
-	const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-	return useQuery({
-		...orpc.auth.me.queryOptions(),
-		enabled: isAuthenticated, // Only fetch when authenticated
-	}).data?.user;
+  const query = useQuery({
+    ...orpc.auth.me.queryOptions(),
+    enabled: isAuthenticated, // Only fetch when authenticated
+  });
+
+  return query.data?.user || null;
 }
