@@ -8,6 +8,20 @@
 			"when": 1758041438906,
 			"tag": "0000_curved_miek",
 			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1758099732977,
+			"tag": "0001_mushy_wendigo",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1758100324613,
+			"tag": "0002_luxuriant_dragon_lord",
+			"breakpoints": true
 		}
 	]
 }

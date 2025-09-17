@@ -1,7 +1,9 @@
 import type { RouterClient } from "@orpc/server";
 import { publicProcedure } from "../lib/orpc";
+import { analyticsRouter } from "./analytics";
 import { authRouter } from "./auth";
 import { courseRouter } from "./course";
+import { userRouter } from "./user";
 
 export const appRouter = {
 	healthCheck: publicProcedure
@@ -18,6 +20,8 @@ export const appRouter = {
 		}),
 	auth: authRouter,
 	course: courseRouter,
+	user: userRouter,
+	analytics: analyticsRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

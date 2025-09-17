@@ -9,7 +9,7 @@ export default function Header() {
 
 	return (
 		<header className="sticky top-0 z-10 w-full border-b bg-background">
-			<div className="mx-4 flex h-14 items-center sm:mx-8">
+			<div className="mx-4 flex h-14 items-center">
 				<div className="flex-1">
 					<h1 className="font-semibold text-lg">{getPageTitle(pathname)}</h1>
 				</div>

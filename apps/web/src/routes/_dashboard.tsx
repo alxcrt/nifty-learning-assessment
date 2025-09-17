@@ -17,7 +17,7 @@ function DashboardLayout() {
 			<Sidebar />
 			<div className="ml-[90px]">
 				<Header />
-				<main className="min-h-[calc(100vh-3.5rem)]">
+				<main className="min-h-[calc(100vh-3.5rem)] space-y-6 p-6">
 					<Outlet />
 				</main>
 			</div>

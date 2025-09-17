@@ -1,6 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
-import { Computer, LogOut, Moon, Sun } from "lucide-react";
-import { useTheme } from "@/components/theme-provider";
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -21,7 +20,7 @@ export default function Avatar() {
 		return null;
 	}
 
-	const initialsAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=32`;
+	const _initialsAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=32`;
 
 	const avatarUrl = `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent(user.name)}&size=32`;
 
