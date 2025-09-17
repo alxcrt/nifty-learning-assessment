@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import z from "zod";
+import { formatHoursAndMinutes } from "@/lib/utils";
 import { db } from "../db";
 import { course } from "../db/schema/course";
 import { protectedProcedure } from "../lib/orpc";
@@ -17,7 +18,11 @@ export const courseRouter = {
 			}),
 		})
 		.handler(async () => {
-			return await db.select().from(course);
+			const courses = await db.select().from(course);
+			return courses.map((c) => ({
+				...c,
+				durationMinutes: formatHoursAndMinutes(c.durationMinutes),
+			}));
 		}),
 
 	create: protectedProcedure
@@ -33,7 +38,7 @@ export const courseRouter = {
 			z.object({
 				title: z.string().min(1),
 				description: z.string().min(1),
-				duration: z.number().min(1),
+				durationMinutes: z.number().min(1),
 			}),
 		)
 		.handler(async ({ input }) => {
@@ -42,7 +47,7 @@ export const courseRouter = {
 				.values({
 					title: input.title,
 					description: input.description,
-					duration: input.duration,
+					durationMinutes: input.durationMinutes,
 				})
 				.returning();
 			return result[0];

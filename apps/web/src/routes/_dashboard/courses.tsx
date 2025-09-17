@@ -41,7 +41,7 @@ function CoursesRoute() {
 								</p>
 								<div className="flex items-center text-muted-foreground text-sm">
 									<Clock className="mr-2 h-4 w-4" />
-									{course.duration}
+									{course.durationMinutes}
 								</div>
 							</CardContent>
 						</Card>

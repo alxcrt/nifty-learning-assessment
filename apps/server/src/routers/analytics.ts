@@ -1,4 +1,7 @@
+import { eq } from "drizzle-orm";
+import { avg } from "drizzle-orm/sql";
 import { db } from "../db";
+import { progress } from "../db/schema/progress";
 import { user } from "../db/schema/user";
 import { protectedProcedure } from "../lib/orpc";
 
@@ -26,22 +29,34 @@ export const analyticsRouter = {
 				description: "Active team members",
 			});
 
-			// Placeholder values since actual calculations aren't implemented
+			const completedCoursesCount = await db.$count(
+				progress,
+				eq(progress.status, "completed"),
+			);
 			stats.push({
 				title: "Completed Courses",
-				value: Math.floor(Math.random() * 100).toString(),
+				value: completedCoursesCount,
 				description: "Successfully finished",
 			});
 
+			const inProgressCount = await db.$count(
+				progress,
+				eq(progress.status, "in_progress"),
+			);
 			stats.push({
 				title: "In Progress",
-				value: Math.floor(Math.random() * 50).toString(),
+				value: inProgressCount,
 				description: "Currently learning",
 			});
 
+			const avgCompletion = (
+				await db
+					.select({ avg: avg(progress.completionPercentage).mapWith(Number) })
+					.from(progress)
+			)[0].avg;
 			stats.push({
 				title: "Avg. Completion",
-				value: `${Math.floor(Math.random() * 100)}%`,
+				value: `${avgCompletion.toFixed(2)}%`,
 				description: "Team progress rate",
 			});
 

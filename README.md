@@ -41,6 +41,17 @@ This project uses PostgreSQL with Drizzle ORM.
 bun db:push
 ```
 
+4. Seed the database with realistic test data:
+
+```bash
+bun db:seed
+```
+
+This will populate your database with:
+- 100 users with realistic names and emails
+- 15 courses across various tech topics
+- Progress records linking users to courses with completion data
+
 Then, run the development server:
 
 ```bash

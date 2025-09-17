@@ -1,15 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Search } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { orpc } from "@/utils/orpc";
 import { Button } from "./ui/button";
 
+type UserFilters = NonNullable<Parameters<typeof orpc.user.getAll.queryKey>[0]>;
+
 const COLUMNS = [
-	{ header: "Name", accessor: "name" },
-	{ header: "Progress", accessor: "progress" },
-	{ header: "Time Spent", accessor: "timeSpent" },
+	{ header: "Name", accessor: "name" as const, sortable: true },
+	{ header: "Progress", accessor: "progress" as const, sortable: true },
+	{ header: "Time Spent", accessor: "timeSpent" as const, sortable: true },
 ];
 
 const ProgressBar = ({ progress }: { progress: number }) => {
@@ -29,11 +31,39 @@ const ProgressBar = ({ progress }: { progress: number }) => {
 };
 
 export default function Members() {
-	const [inputValue, setInputValue] = useState("");
-	const [page, setPage] = useState(1);
-	const limit = 10;
+	const [searchInput, setSearchInput] = useState("");
+	const [options, setOptions] = useState({
+		search: "",
+		limit: 10,
+		offset: 0,
+		sortBy: "timeSpent",
+		sortOrder: "desc",
+	});
 
-	const debounceSearch = useDebounce(inputValue, 300);
+	const debouncedSearch = useDebounce(searchInput, 300);
+
+	// Update options when debounced search changes
+	useEffect(() => {
+		setOptions((prev) => ({ ...prev, search: debouncedSearch, offset: 0 }));
+	}, [debouncedSearch]);
+
+	// Helper to update filters
+	const setFilter =
+		<K extends keyof typeof options>(key: K) =>
+		(value: (typeof options)[K]) => {
+			if (key === "search") {
+				setOptions((prev) => ({ ...prev, [key]: value, offset: 0 }));
+			} else if (key === "sortBy") {
+				setOptions((prev) => ({
+					...prev,
+					[key]: value,
+					sortOrder:
+						prev.sortBy === value && prev.sortOrder === "asc" ? "desc" : "asc",
+				}));
+			} else {
+				setOptions((prev) => ({ ...prev, [key]: value }));
+			}
+		};
 
 	const {
 		data: users,
@@ -41,17 +71,13 @@ export default function Members() {
 		isLoading: isLoadingUsers,
 	} = useQuery({
 		...orpc.user.getAll.queryOptions({
-			input: {
-				search: debounceSearch,
-				limit,
-				offset: (page - 1) * limit,
-			},
+			input: options as UserFilters,
 		}),
 		// No more loading state flicker when typing
 		placeholderData: (previousData) => previousData,
 	});
 
-	const totalPages = Math.ceil((users?.count || 0) / limit);
+	const totalPages = Math.ceil((users?.count || 0) / options.limit) || 1;
 
 	return (
 		<div className="space-y-6">
@@ -67,8 +93,8 @@ export default function Members() {
 					<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
 					<Input
 						placeholder="Search by name or email..."
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
+						value={searchInput}
+						onChange={(e) => setSearchInput(e.target.value)}
 						className="pl-10"
 					/>
 				</div>
@@ -83,7 +109,23 @@ export default function Members() {
 									key={col.accessor}
 									className="px-4 py-3 text-left font-medium text-sm"
 								>
-									{col.header}
+									{col.sortable ? (
+										<Button
+											variant="ghost"
+											onClick={() => setFilter("sortBy")(col.accessor)}
+											className="flex items-center gap-1 transition-colors hover:text-foreground"
+										>
+											{col.header}
+											{options.sortBy === col.accessor &&
+												(options.sortOrder === "asc" ? (
+													<ChevronUp className="h-4 w-4" />
+												) : (
+													<ChevronDown className="h-4 w-4" />
+												))}
+										</Button>
+									) : (
+										col.header
+									)}
 								</th>
 							))}
 						</tr>
@@ -133,18 +175,25 @@ export default function Members() {
 				</div>
 				<div className="flex items-center gap-2">
 					<Button
-						onClick={() => setPage((p) => Math.max(1, p - 1))}
-						disabled={page === 1}
+						onClick={() =>
+							setFilter("offset")((options.offset || 0) - options.limit)
+						}
+						disabled={options.offset === 0}
 						className="rounded border px-3 py-1 text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						Previous
 					</Button>
 					<span className="text-sm">
-						Page {page} of {totalPages}
+						Page {Math.ceil((options.offset || 0) / options.limit) + 1} of{" "}
+						{totalPages}
 					</span>
 					<Button
-						onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-						disabled={page === totalPages}
+						onClick={() =>
+							setFilter("offset")((options.offset || 0) + options.limit)
+						}
+						disabled={
+							(options.offset || 0) + options.limit >= (users?.count || 0)
+						}
 						className="rounded border px-3 py-1 text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						Next
