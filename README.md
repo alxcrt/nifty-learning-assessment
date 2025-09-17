@@ -1,4 +1,9 @@
-# nifty-learning-assessment
+# Nifty Learning Platform
+
+## Live Services
+
+- **Web Application**: [https://nifty.alexcretu.com/](https://nifty.alexcretu.com/)
+- **API & OpenAPI Documentation**: [https://nifty-api.alexcretu.com/api](https://nifty-api.alexcretu.com/api)
 
 ## Technologies Used
 
@@ -56,11 +61,23 @@ nifty-learning-assessment/
 
 ## Available Scripts
 
-- `bun dev`: Start all applications in development mode
-- `bun build`: Build all applications
-- `bun dev:web`: Start only the web application
-- `bun dev:server`: Start only the server
-- `bun check-types`: Check TypeScript types across all apps
-- `bun db:push`: Push schema changes to database
-- `bun db:studio`: Open database studio UI
-- `bun check`: Run Biome formatting and linting
+### Root Directory Commands
+
+| Command           | Description                                |
+| ----------------- | ------------------------------------------ |
+| `bun dev`         | Start all applications in development mode |
+| `bun build`       | Build all applications                     |
+| `bun dev:web`     | Start only the web application             |
+| `bun dev:server`  | Start only the server                      |
+| `bun check-types` | Check TypeScript types across all apps     |
+| `bun db:push`     | Push schema changes to database            |
+| `bun db:studio`   | Open database studio UI                    |
+| `bun check`       | Run Biome formatting and linting           |
+
+### Server-specific Commands
+
+Run these commands from the `apps/server` directory:
+
+| Command       | Description                         |
+| ------------- | ----------------------------------- |
+| `bun db:seed` | Seed the database with initial data |
