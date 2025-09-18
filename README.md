@@ -127,6 +127,7 @@ nifty-learning-assessment/
 | ----------------- | ------------------------------------------ |
 | `bun dev`         | Start all applications in development mode |
 | `bun build`       | Build all applications                     |
+| `bun test`        | Run all tests                              |
 | `bun dev:web`     | Start only the web application             |
 | `bun dev:server`  | Start only the server                      |
 | `bun check-types` | Check TypeScript types across all apps     |
