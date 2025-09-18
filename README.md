@@ -5,13 +5,14 @@
 
 ## Project Overview
 
-This dashboard that provides:
+This dashboard provides:
 
 - **Team Overview**: Statistics on team learning progress
 - **Member Management**: Detailed view of individual user progress
 - **Course Tracking**: Monitor course completions, time spent, and due dates
 - **Analytics Dashboard**: Visual representations of learning metrics
 - **Search & Filter**: Advanced search with full-text search and overdue filtering
+- **Email Notifications**: Automated notifications for overdue courses for team members
 
 ## Technologies Used
 

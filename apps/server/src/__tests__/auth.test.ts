@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import jwt from "jsonwebtoken";
 import { verifyToken } from "../lib/auth";
 

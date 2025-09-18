@@ -10,6 +10,7 @@ import express from "express";
 import { db } from "./db";
 import { createContext } from "./lib/context";
 import { appRouter } from "./routers";
+import { notificationService } from "./services/notifications";
 
 const app = express();
 
@@ -93,4 +94,7 @@ await migrate(db, { migrationsFolder: "./src/db/migrations" });
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
+
+	// Start notification cron jobs
+	notificationService.start();
 });
