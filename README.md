@@ -34,7 +34,7 @@ This dashboard that provides:
 
 #### Backend Architecture
 
-- **Bun Runtime**: Chosen for performance, built-in TypeScript support, and integrated utilities (password hashing)
+- **Bun Runtime**: Chosen for performance, built-in TypeScript support, and integrated utilities (password hashing, testing)
 - **Express + ORPC**: Type-safe API layer with automatic OpenAPI documentation generation
 - **PostgreSQL**: Relational database with a great search capabilities using full-text search
 - **Drizzle ORM**: TypeScript-first ORM providing type safety at the database layer

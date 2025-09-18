@@ -13,6 +13,18 @@
 		"check-types": {
 			"dependsOn": ["^check-types"]
 		},
+		"test": {
+			"inputs": ["src/**/*.{ts,tsx}", "src/**/*.test.{ts,tsx}"],
+			"outputs": ["coverage/**"]
+		},
+		"test:watch": {
+			"cache": false,
+			"persistent": true
+		},
+		"test:coverage": {
+			"inputs": ["src/**/*.{ts,tsx}", "src/**/*.test.{ts,tsx}"],
+			"outputs": ["coverage/**"]
+		},
 		"dev": {
 			"cache": false,
 			"persistent": true

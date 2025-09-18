@@ -1,6 +1,13 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "nifty";
+// Helper to get JWT secret from environment variables (good for testing)
+const getJwtSecret = () => {
+	const secret = process.env.JWT_SECRET;
+	if (!secret) {
+		throw new Error("JWT_SECRET is not defined in environment variables");
+	}
+	return secret;
+};
 
 export async function hashPassword(password: string): Promise<string> {
 	return Bun.password.hash(password, {
@@ -32,9 +39,9 @@ export function generateToken(user: {
 		email: user.email,
 		name: user.name,
 	};
-	return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+	return jwt.sign(payload, getJwtSecret(), { expiresIn: "7d" });
 }
 
 export function verifyToken(token: string): JWTPayload {
-	return jwt.verify(token, JWT_SECRET) as JWTPayload;
+	return jwt.verify(token, getJwtSecret()) as JWTPayload;
 }
