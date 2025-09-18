@@ -13,6 +13,21 @@ This dashboard that provides:
 - **Analytics Dashboard**: Visual representations of learning metrics
 - **Search & Filter**: Advanced search with full-text search and overdue filtering
 
+## Technologies Used
+
+- **TypeScript** - For type safety and improved developer experience
+- **TanStack Router** - File-based routing with full type safety
+- **TailwindCSS** - Utility-first CSS for rapid UI development
+- **shadcn/ui** - Reusable UI components
+- **Express** - Fast, unopinionated web framework
+- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
+- **Bun** - Runtime environment
+- **Drizzle** - TypeScript-first ORM
+- **PostgreSQL** - Database engine
+- **Biome** - Linting and formatting
+- **Husky** - Git hooks for code quality
+- **Turborepo** - Optimized monorepo build system
+
 ## Architectural Decisions
 
 > **TL;DR**: I really f\*\*\*ing love TypeScript
@@ -45,21 +60,6 @@ This dashboard that provides:
 2. **Complexity vs Simplicity**: Chose a full-featured stack over minimal setup for better DX and maintainability
 3. **Type Safety vs Flexibility**: Prioritized type safety throughout the stack
 4. **Authentication**: Implemented basic JWT auth instead of using a library like BetterAuth for simplicity.
-
-## Technologies Used
-
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Router** - File-based routing with full type safety
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **Express** - Fast, unopinionated web framework
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **Bun** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Biome** - Linting and formatting
-- **Husky** - Git hooks for code quality
-- **Turborepo** - Optimized monorepo build system
 
 ## Getting Started
 
