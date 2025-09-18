@@ -106,6 +106,10 @@ bun dev
 - **API Documentation**: [http://localhost:3000/api](http://localhost:3000/api)
 - **Database Studio**: Run `bun db:studio` to explore data
 
+## Testing
+
+The project include some unit tests using Bun's built-in test runner.
+
 ## Project Structure
 
 ```
