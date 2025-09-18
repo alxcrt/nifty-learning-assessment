@@ -1,9 +1,50 @@
-# Nifty Learning Platform
-
-## Live Services
+# Nifty Learning Platform - Team Learning Dashboard
 
 - **Web Application**: [https://nifty.alexcretu.com/](https://nifty.alexcretu.com/)
 - **API & OpenAPI Documentation**: [https://nifty-api.alexcretu.com/api](https://nifty-api.alexcretu.com/api)
+
+## Project Overview
+
+This dashboard that provides:
+
+- **Team Overview**: Statistics on team learning progress
+- **Member Management**: Detailed view of individual user progress
+- **Course Tracking**: Monitor course completions, time spent, and due dates
+- **Analytics Dashboard**: Visual representations of learning metrics
+- **Search & Filter**: Advanced search with full-text search and overdue filtering
+
+## Architectural Decisions
+
+> **TL;DR**: I really f\*\*\*ing love TypeScript
+
+#### Backend Architecture
+
+- **Bun Runtime**: Chosen for performance, built-in TypeScript support, and integrated utilities (password hashing)
+- **Express + ORPC**: Type-safe API layer with automatic OpenAPI documentation generation
+- **PostgreSQL**: Relational database with a great search capabilities using full-text search
+- **Drizzle ORM**: TypeScript-first ORM providing type safety at the database layer
+
+#### Frontend Architecture
+
+- **React + TanStack Router**: File-based routing with full type safety
+- **TanStack Query**: Powerful data fetching library with automatic caching and refetching
+- **Tailwind CSS + shadcn/ui**: Rapid UI development with consistent design system
+- **Vite**: Fast HMR and optimized production builds
+
+### Design Patterns
+
+- **Monorepo Structure**: Shared types and utilities between frontend and backend
+- **Repository Pattern**: Clean separation of data access logic
+- **Optimistic UI Updates**: Better user experience with immediate feedback
+- **Full-Text Search**: PostgreSQL's built-in Full Text Search for efficient and powerful search capabilities
+- **Biome + Husky**: Enforce code quality and consistency with linting and pre-commit hooks
+
+### Trade-offs Made
+
+1. **Build vs Buy Decision**: Chose to implement core functionality from scratch rather than relying on third-party libraries, demonstrating deeper technical understanding
+2. **Complexity vs Simplicity**: Chose a full-featured stack over minimal setup for better DX and maintainability
+3. **Type Safety vs Flexibility**: Prioritized type safety throughout the stack
+4. **Authentication**: Implemented basic JWT auth instead of using a library like BetterAuth for simplicity.
 
 ## Technologies Used
 
@@ -48,6 +89,7 @@ bun db:seed
 ```
 
 This will populate your database with:
+
 - 100 users with realistic names and emails
 - 15 courses across various tech topics
 - Progress records linking users to courses with completion data
@@ -58,8 +100,11 @@ Then, run the development server:
 bun dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+## Access the Applications
+
+- **Web Application**: [http://localhost:3001](http://localhost:3001)
+- **API Documentation**: [http://localhost:3000/api](http://localhost:3000/api)
+- **Database Studio**: Run `bun db:studio` to explore data
 
 ## Project Structure
 

@@ -94,29 +94,29 @@ export default function Members() {
 
 			<div className="flex flex-col gap-4">
 				<div className="flex items-center gap-4">
-					<div className="relative max-w-sm flex-1">
+					<div className="relative w-full flex-1 md:max-w-2xl">
 						<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
 						<Input
-							placeholder="Search by name or email..."
+							placeholder="Search by name, email, or vector similarity... (use :* for wildcards)"
 							value={searchInput}
 							onChange={(e) => setSearchInput(e.target.value)}
-							className="pl-10"
+							className="h-11 pl-10 text-base"
+							aria-label="Search team members"
 						/>
 					</div>
-					<div className="flex items-center space-x-2">
-						<Checkbox
-							checked={options.overdue}
-							onCheckedChange={(checked: boolean) =>
-								setFilter("overdue")(checked)
-							}
-						/>
+					<Button
+						variant="ghost"
+						className="flex items-center space-x-2"
+						onClick={() => setFilter("overdue")(!options.overdue)}
+					>
+						<Checkbox checked={options.overdue} />
 						<label
 							htmlFor="overdue-filter"
 							className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 						>
 							Show overdue only
 						</label>
-					</div>
+					</Button>
 				</div>
 			</div>
 
