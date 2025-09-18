@@ -9,9 +9,9 @@ import { emailService } from "./email";
 export class NotificationService {
 	private scheduledJobs: Map<string, cron.ScheduledTask> = new Map();
 
-	// Check for overdue courses every day at 9 AM
+	// Check for overdue courses every day at 12 AM (midnight)
 	scheduleOverdueNotifications() {
-		const job = cron.schedule("0 9 * * *", async () => {
+		const job = cron.schedule("0 0 * * *", async () => {
 			await this.sendOverdueNotifications();
 		});
 
