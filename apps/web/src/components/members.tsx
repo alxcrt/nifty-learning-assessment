@@ -1,34 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AvatarPicture } from "@/components/avatar";
+import { ProgressBar } from "@/components/progress-bar";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { orpc } from "@/utils/orpc";
 import { Button } from "./ui/button";
 
-type UserFilters = NonNullable<Parameters<typeof orpc.user.getAll.queryKey>[0]>;
+// Infer the input type from ORPC queryOptions
+type UserOptionsRaw = NonNullable<
+	Parameters<typeof orpc.user.getAll.queryOptions>[0]
+>["input"];
+type UserOptions = Exclude<UserOptionsRaw, symbol>;
 
 const COLUMNS = [
 	{ header: "Name", accessor: "name" as const, sortable: true },
+	{ header: "Courses", accessor: "coursesCompleted" as const, sortable: true },
 	{ header: "Progress", accessor: "progress" as const, sortable: true },
 	{ header: "Time Spent", accessor: "timeSpent" as const, sortable: true },
+	// Accesor this is just a placeholder, actions column is not sortable
+	{ header: "Actions", accessor: "name" as const, sortable: false },
 ];
-
-const ProgressBar = ({ progress }: { progress: number }) => {
-	return (
-		<div className="flex items-center gap-2">
-			<div className="max-w-[80px] flex-1">
-				<div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-					<div
-						className="h-2 rounded-full bg-primary transition-all"
-						style={{ width: `${progress}%` }}
-					/>
-				</div>
-			</div>
-			<span className="text-muted-foreground text-sm">{progress}%</span>
-		</div>
-	);
-};
 
 export default function Members() {
 	const [searchInput, setSearchInput] = useState("");
@@ -36,23 +31,32 @@ export default function Members() {
 		search: "",
 		limit: 10,
 		offset: 0,
-		sortBy: "timeSpent",
+		sortBy: "name",
 		sortOrder: "desc",
+		overdue: false,
 	});
 
 	const debouncedSearch = useDebounce(searchInput, 300);
 
 	// Update options when debounced search changes
 	useEffect(() => {
-		setOptions((prev) => ({ ...prev, search: debouncedSearch, offset: 0 }));
+		setOptions((prev) => ({
+			...prev,
+			search: debouncedSearch,
+			offset: 0,
+		}));
 	}, [debouncedSearch]);
 
 	// Helper to update filters
 	const setFilter =
-		<K extends keyof typeof options>(key: K) =>
-		(value: (typeof options)[K]) => {
+		<K extends keyof UserOptions>(key: K) =>
+		(value: UserOptions[K]) => {
 			if (key === "search") {
-				setOptions((prev) => ({ ...prev, [key]: value, offset: 0 }));
+				setOptions((prev) => ({
+					...prev,
+					[key]: value,
+					offset: 0,
+				}));
 			} else if (key === "sortBy") {
 				setOptions((prev) => ({
 					...prev,
@@ -71,7 +75,7 @@ export default function Members() {
 		isLoading: isLoadingUsers,
 	} = useQuery({
 		...orpc.user.getAll.queryOptions({
-			input: options as UserFilters,
+			input: options as UserOptions,
 		}),
 		// No more loading state flicker when typing
 		placeholderData: (previousData) => previousData,
@@ -89,14 +93,30 @@ export default function Members() {
 			</div>
 
 			<div className="flex flex-col gap-4">
-				<div className="relative max-w-sm flex-1">
-					<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
-					<Input
-						placeholder="Search by name or email..."
-						value={searchInput}
-						onChange={(e) => setSearchInput(e.target.value)}
-						className="pl-10"
-					/>
+				<div className="flex items-center gap-4">
+					<div className="relative max-w-sm flex-1">
+						<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+						<Input
+							placeholder="Search by name or email..."
+							value={searchInput}
+							onChange={(e) => setSearchInput(e.target.value)}
+							className="pl-10"
+						/>
+					</div>
+					<div className="flex items-center space-x-2">
+						<Checkbox
+							checked={options.overdue}
+							onCheckedChange={(checked: boolean) =>
+								setFilter("overdue")(checked)
+							}
+						/>
+						<label
+							htmlFor="overdue-filter"
+							className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						>
+							Show overdue only
+						</label>
+					</div>
 				</div>
 			</div>
 
@@ -107,7 +127,7 @@ export default function Members() {
 							{COLUMNS.map((col) => (
 								<th
 									key={col.accessor}
-									className="px-4 py-3 text-left font-medium text-sm"
+									className="py-3 text-left font-medium text-sm"
 								>
 									{col.sortable ? (
 										<Button
@@ -133,7 +153,7 @@ export default function Members() {
 					<tbody>
 						{isLoadingUsers ? (
 							<tr>
-								<td colSpan={3} className="py-8 text-center">
+								<td colSpan={7} className="py-8 text-center">
 									<Loader2 className="mx-auto h-6 w-6 animate-spin" />
 								</td>
 							</tr>
@@ -147,7 +167,7 @@ export default function Members() {
 						)}
 						{isErrorUsers ? (
 							<tr>
-								<td colSpan={3} className="py-8 text-center text-red-500">
+								<td colSpan={7} className="py-8 text-center text-red-500">
 									Error loading team members.
 								</td>
 							</tr>
@@ -155,13 +175,30 @@ export default function Members() {
 						{users?.items.map((member) => (
 							<tr
 								key={member.id}
-								className="border-b transition-colors hover:bg-muted/50"
+								className="border-b text-left transition-colors hover:bg-muted/50"
 							>
-								<td className="px-4 py-3 font-medium">{member.name}</td>
+								<td className="px-4 py-3 font-medium">
+									<Link
+										to="/user/$id"
+										params={{ id: member.id.toString() }}
+										className="flex items-center gap-3 text-primary hover:underline"
+									>
+										<AvatarPicture name={member.name} />
+										{member.name}
+									</Link>
+								</td>
+								<td className="px-4 py-3">
+									{member.coursesCompleted} / {member.totalCourses}
+								</td>
 								<td className="px-4 py-3">
 									<ProgressBar progress={member.progress} />
 								</td>
 								<td className="px-4 py-3">{member.timeSpent}</td>
+								<td>
+									<Link to="/user/$id" params={{ id: member.id.toString() }}>
+										<Button variant="outline">View Details</Button>
+									</Link>
+								</td>
 							</tr>
 						))}
 					</tbody>

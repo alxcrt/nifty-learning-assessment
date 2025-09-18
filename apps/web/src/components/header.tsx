@@ -1,6 +1,6 @@
 import { useRouterState } from "@tanstack/react-router";
 import { getPageTitle } from "@/lib/navigation";
-import Avatar from "./avatar";
+import { Avatar } from "./avatar";
 import { ModeToggle } from "./mode-toggle";
 
 export default function Header() {

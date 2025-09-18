@@ -9,8 +9,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { useUser } from "@/hooks/useUser";
+import { cn } from "@/lib/utils";
 
-export default function Avatar() {
+export function AvatarPicture({
+	name,
+	className = "h-8 w-8",
+}: {
+	name: string;
+	className?: string;
+}) {
+	const _initialsAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=32`;
+
+	const avatarUrl = `https://avatar.iran.liara.run/public?username=${encodeURIComponent(name)}&size=32`;
+
+	return (
+		<img
+			src={avatarUrl}
+			alt="User avatar"
+			className={cn(`${className} rounded-full`)}
+			onError={(e) => {
+				e.currentTarget.style.display = "none";
+			}}
+		/>
+	);
+}
+
+export function Avatar() {
 	const { logout } = useAuth();
 	const user = useUser();
 
@@ -20,22 +44,11 @@ export default function Avatar() {
 		return null;
 	}
 
-	const _initialsAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=32`;
-
-	const avatarUrl = `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent(user.name)}&size=32`;
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
-					<img
-						src={avatarUrl}
-						alt="User avatar"
-						className="h-8 w-8 rounded-full"
-						onError={(e) => {
-							e.currentTarget.style.display = "none";
-						}}
-					/>
+					<AvatarPicture name={user.name} />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

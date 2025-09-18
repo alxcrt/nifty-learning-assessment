@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { avg } from "drizzle-orm/sql";
 import { db } from "../db";
 import { progress } from "../db/schema/progress";
@@ -46,7 +46,17 @@ export const analyticsRouter = {
 			stats.push({
 				title: "In Progress",
 				value: inProgressCount,
-				description: "Currently learning",
+				description: "Courses being taken",
+			});
+
+			const overdueCount = await db.$count(
+				progress,
+				sql`DATE(${progress.dueDate}) < CURRENT_DATE AND ${progress.status} != 'completed'`,
+			);
+			stats.push({
+				title: "Overdue",
+				value: overdueCount,
+				description: "Courses past due date",
 			});
 
 			const avgCompletion = (
