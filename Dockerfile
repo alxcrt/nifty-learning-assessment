@@ -2,6 +2,7 @@ FROM oven/bun:1.4.3-slim AS bun
 FROM node:24-bookworm-slim AS build
 COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && rm -rf /var/lib/apt/lists/*
 COPY . .
 RUN bun install --frozen-lockfile
 ARG VITE_SERVER_URL=http://localhost:3000
