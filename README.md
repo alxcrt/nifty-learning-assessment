@@ -6,7 +6,6 @@
 ## Project Overview
 
 This dashboard provides:
-
 - **Team Overview**: Statistics on team learning progress
 - **Member Management**: Detailed view of individual user progress
 - **Course Tracking**: Monitor course completions, time spent, and due dates
@@ -73,7 +72,6 @@ bun install
 ## Database Setup
 
 This project uses PostgreSQL with Drizzle ORM.
-
 1. Make sure you have a PostgreSQL database set up.
 2. Update your `apps/server/.env` file with your PostgreSQL connection details.
 
@@ -90,7 +88,6 @@ bun db:seed
 ```
 
 This will populate your database with:
-
 - 100 users with realistic names and emails
 - 15 courses across various tech topics
 - Progress records linking users to courses with completion data

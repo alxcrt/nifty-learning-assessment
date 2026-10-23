@@ -76,7 +76,7 @@ function LoginRoute() {
 							disabled={loginMutation.isPending}
 						/>
 					</div>
-					{error && <div className="text-red-600 text-sm">{error}</div>}
+					{error && <div className="text-sm text-red-600">{error}</div>}
 					<Button
 						type="submit"
 						className="w-full"
@@ -90,7 +90,7 @@ function LoginRoute() {
 					</Button>
 				</form>
 				<div className="mt-4 text-center">
-					<p className="text-gray-600 text-sm">
+					<p className="text-sm text-gray-600">
 						Don't have an account?{" "}
 						<Button
 							variant="link"

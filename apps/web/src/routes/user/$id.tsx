@@ -30,7 +30,7 @@ function Header() {
 			<div className="mb-6 flex items-center gap-4">
 				<AvatarPicture name={user.name} className="h-16 w-16" />
 				<div>
-					<h1 className="font-bold text-3xl">{user.name}</h1>
+					<h1 className="text-3xl font-bold">{user.name}</h1>
 					<p className="text-muted-foreground">{user.email}</p>
 				</div>
 			</div>
@@ -38,10 +38,10 @@ function Header() {
 			<div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">Time Spent</CardTitle>
+						<CardTitle className="text-sm font-medium">Time Spent</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="font-bold text-2xl">
+						<div className="text-2xl font-bold">
 							{user.stats.totalTimeSpent}
 						</div>
 					</CardContent>
@@ -49,12 +49,12 @@ function Header() {
 
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">
+						<CardTitle className="text-sm font-medium">
 							Average Progress
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="font-bold text-2xl">
+						<div className="text-2xl font-bold">
 							{user.stats.averageProgress}%
 						</div>
 					</CardContent>
@@ -62,10 +62,10 @@ function Header() {
 
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">Completed</CardTitle>
+						<CardTitle className="text-sm font-medium">Completed</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="font-bold text-2xl">
+						<div className="text-2xl font-bold">
 							{user.stats.coursesCompleted}
 						</div>
 					</CardContent>
@@ -73,10 +73,10 @@ function Header() {
 
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">Total Courses</CardTitle>
+						<CardTitle className="text-sm font-medium">Total Courses</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="font-bold text-2xl">{user.stats.totalCourses}</div>
+						<div className="text-2xl font-bold">{user.stats.totalCourses}</div>
 					</CardContent>
 				</Card>
 			</div>
@@ -119,7 +119,7 @@ function UserDetail() {
 			<Header />
 
 			<div>
-				<h2 className="mb-4 font-bold text-2xl">Course Progress</h2>
+				<h2 className="mb-4 text-2xl font-bold">Course Progress</h2>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{user.courses.length === 0 && (
 						<p className="text-muted-foreground">No courses enrolled.</p>
@@ -132,7 +132,7 @@ function UserDetail() {
 										<CardTitle className="text-lg">{course.title}</CardTitle>
 									</div>
 									<span
-										className={`rounded-full px-2 py-1 font-medium text-xs ${getStatusColor(
+										className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(
 											course.status,
 											course.dueDate,
 										)}`}

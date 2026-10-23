@@ -20,10 +20,10 @@ export default function Overview() {
 			{stats.map((stat) => (
 				<Card key={stat.title}>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">{stat.title}</CardTitle>
+						<CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="font-bold text-2xl">{stat.value}</div>
+						<div className="text-2xl font-bold">{stat.value}</div>
 						<p className="text-muted-foreground text-xs">{stat.description}</p>
 					</CardContent>
 				</Card>

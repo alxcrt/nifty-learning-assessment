@@ -71,8 +71,12 @@
 				"JWT_SECRET",
 				"PORT",
 				"NODE_ENV",
-				"API_URL"
+				"API_URL",
+				"FRONTEND_PORT"
 			]
+		},
+		"web#check-types": {
+			"dependsOn": ["server#check-types"]
 		}
 	}
 }

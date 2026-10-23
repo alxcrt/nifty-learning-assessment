@@ -14,7 +14,7 @@ function CoursesRoute() {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h2 className="font-bold text-2xl">Courses</h2>
+				<h2 className="text-2xl font-bold">Courses</h2>
 				<p className="text-muted-foreground">
 					Browse and manage your learning courses
 				</p>
@@ -25,7 +25,7 @@ function CoursesRoute() {
 					<Loader2 className="h-6 w-6 animate-spin" />
 				</div>
 			) : courses.data?.length === 0 ? (
-				<p className="py-8 text-center text-muted-foreground">
+				<p className="text-muted-foreground py-8 text-center">
 					No courses available yet.
 				</p>
 			) : (
@@ -36,10 +36,10 @@ function CoursesRoute() {
 								<CardTitle className="text-lg">{course.title}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<p className="mb-4 text-muted-foreground text-sm">
+								<p className="text-muted-foreground mb-4 text-sm">
 									{course.description}
 								</p>
-								<div className="flex items-center text-muted-foreground text-sm">
+								<div className="text-muted-foreground flex items-center text-sm">
 									<Clock className="mr-2 h-4 w-4" />
 									{course.durationMinutes}
 								</div>
