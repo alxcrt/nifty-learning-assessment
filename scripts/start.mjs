@@ -16,7 +16,14 @@ const children = [
 			process.env.FRONTEND_PORT || "3001",
 			"--single",
 		],
-		{ stdio: "inherit", env: process.env },
+		{
+			stdio: "inherit",
+			env: {
+				...process.env,
+				PORT: process.env.FRONTEND_PORT || "3001",
+				HOST: "0.0.0.0",
+			},
+		},
 	),
 ];
 let stopping = false;
