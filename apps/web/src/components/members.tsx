@@ -8,13 +8,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { orpc } from "@/utils/orpc";
+import type { AppRouterClient } from "../../../server/src/routers";
 import { Button } from "./ui/button";
 
-// Infer the input type from ORPC queryOptions
-type UserOptionsRaw = NonNullable<
-	Parameters<typeof orpc.user.getAll.queryOptions>[0]
->["input"];
-type UserOptions = Exclude<UserOptionsRaw, symbol>;
+type UserOptions = Required<
+	NonNullable<Parameters<AppRouterClient["user"]["getAll"]>[0]>
+>;
 
 const COLUMNS = [
 	{ header: "Name", accessor: "name" as const, sortable: true },
@@ -27,7 +26,7 @@ const COLUMNS = [
 
 export default function Members() {
 	const [searchInput, setSearchInput] = useState("");
-	const [options, setOptions] = useState({
+	const [options, setOptions] = useState<UserOptions>({
 		search: "",
 		limit: 10,
 		offset: 0,
@@ -75,7 +74,7 @@ export default function Members() {
 		isLoading: isLoadingUsers,
 	} = useQuery({
 		...orpc.user.getAll.queryOptions({
-			input: options as UserOptions,
+			input: options,
 		}),
 		// No more loading state flicker when typing
 		placeholderData: (previousData) => previousData,
@@ -86,7 +85,7 @@ export default function Members() {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h2 className="font-bold text-2xl">Team Members</h2>
+				<h2 className="text-2xl font-bold">Team Members</h2>
 				<p className="text-muted-foreground">
 					Manage and monitor all team members' learning progress
 				</p>
@@ -95,7 +94,7 @@ export default function Members() {
 			<div className="flex flex-col gap-4">
 				<div className="flex items-center gap-4">
 					<div className="relative w-full flex-1 md:max-w-2xl">
-						<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+						<Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
 						<Input
 							placeholder="Search by name, email, or vector similarity... (use :* for wildcards)"
 							value={searchInput}
@@ -112,7 +111,7 @@ export default function Members() {
 						<Checkbox checked={options.overdue} />
 						<label
 							htmlFor="overdue-filter"
-							className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+							className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 						>
 							Show overdue only
 						</label>
@@ -122,18 +121,18 @@ export default function Members() {
 
 			<div className="overflow-hidden rounded-md border">
 				<table className="w-full">
-					<thead className="border-b bg-muted/50">
+					<thead className="bg-muted/50 border-b">
 						<tr>
 							{COLUMNS.map((col) => (
 								<th
 									key={col.accessor}
-									className="py-3 text-left font-medium text-sm"
+									className="py-3 text-left text-sm font-medium"
 								>
 									{col.sortable ? (
 										<Button
 											variant="ghost"
 											onClick={() => setFilter("sortBy")(col.accessor)}
-											className="flex items-center gap-1 transition-colors hover:text-foreground"
+											className="hover:text-foreground flex items-center gap-1 transition-colors"
 										>
 											{col.header}
 											{options.sortBy === col.accessor &&
@@ -175,13 +174,13 @@ export default function Members() {
 						{users?.items.map((member) => (
 							<tr
 								key={member.id}
-								className="border-b text-left transition-colors hover:bg-muted/50"
+								className="hover:bg-muted/50 border-b text-left transition-colors"
 							>
 								<td className="px-4 py-3 font-medium">
 									<Link
 										to="/user/$id"
 										params={{ id: member.id.toString() }}
-										className="flex items-center gap-3 text-primary hover:underline"
+										className="text-primary flex items-center gap-3 hover:underline"
 									>
 										<AvatarPicture name={member.name} />
 										{member.name}
@@ -216,7 +215,7 @@ export default function Members() {
 							setFilter("offset")((options.offset || 0) - options.limit)
 						}
 						disabled={options.offset === 0}
-						className="rounded border px-3 py-1 text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+						className="hover:bg-muted rounded border px-3 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						Previous
 					</Button>
@@ -231,7 +230,7 @@ export default function Members() {
 						disabled={
 							(options.offset || 0) + options.limit >= (users?.count || 0)
 						}
-						className="rounded border px-3 py-1 text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+						className="hover:bg-muted rounded border px-3 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						Next
 					</Button>

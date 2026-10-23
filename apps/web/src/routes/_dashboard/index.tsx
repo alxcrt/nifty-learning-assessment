@@ -18,7 +18,7 @@ function HomeComponent() {
 		<>
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="font-bold text-3xl">
+					<h1 className="text-3xl font-bold">
 						Welcome back,
 						<span className="text-muted-foreground">{user?.name}</span>!
 					</h1>

@@ -7,11 +7,11 @@
 		"packages/*"
 	],
 	"scripts": {
-		"check": "biome check --write .",
+		"check": "biome check .",
 		"prepare": "husky",
 		"dev": "turbo dev",
 		"build": "turbo build",
-		"start": "turbo start",
+		"start": "node scripts/start.mjs",
 		"check-types": "turbo check-types",
 		"test": "turbo test",
 		"test:server": "turbo -F server test",
@@ -29,17 +29,19 @@
 		"db:stop": "turbo -F server db:stop",
 		"db:down": "turbo -F server db:down"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"sirv-cli": "^3.0.1"
+	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.2.4",
+		"@biomejs/biome": "^2.6.2",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.6",
-		"turbo": "^2.5.6"
+		"lint-staged": "^17.6.0",
+		"turbo": "^2.11.10"
 	},
 	"lint-staged": {
 		"*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
-			"biome check --write ."
+			"biome check --write"
 		]
 	},
-	"packageManager": "bun@1.2.22"
+	"packageManager": "bun@1.4.3"
 }
