@@ -1,47 +1,85 @@
 {
   "name": "Dependency checks",
-  "on": { "push": {}, "pull_request": {}, "workflow_dispatch": {} },
-  "permissions": { "contents": "read" },
-  "concurrency":
-    {
-      "group": "dependency-${{ github.workflow }}-${{ github.ref }}",
-      "cancel-in-progress": true,
-    },
-  "jobs":
-    {
-      "dependency-gate":
+  "on": {
+    "push": {},
+    "pull_request": {},
+    "workflow_dispatch": {}
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "dependency-${{ github.workflow }}-${{ github.ref }}",
+    "cancel-in-progress": true
+  },
+  "jobs": {
+    "dependency-gate": {
+      "name": "Dependency gate",
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 30,
+      "env": {
+        "NEXT_TELEMETRY_DISABLED": "1"
+      },
+      "steps": [
         {
-          "name": "Dependency gate",
-          "runs-on": "ubuntu-latest",
-          "timeout-minutes": 30,
-          "env": { "NEXT_TELEMETRY_DISABLED": "1" },
-          "steps":
-            [
-              {
-                "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-              },
-              {
-                "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
-                "with": { "node-version": "24" },
-              },
-              {
-                "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
-                "with": { "bun-version": "1.4.3" },
-              },
-              { "run": "bun install --frozen-lockfile" },
-              { "run": "bun run check" },
-              { "run": "bun run test" },
-              { "run": "bun run build" },
-              { "run": "bun run check-types" },
-              {
-                "name": "Build the exact deployment runtime",
-                "run": "docker build --pull -t dependency-check .",
-              },
-              {
-                "name": "Start the compiled deployment against isolated PostgreSQL",
-                "run": "set -eu\ntrap 'docker logs dependency-app 2>/dev/null || true; docker rm -f dependency-app dependency-db 2>/dev/null || true; docker network rm dependency-test 2>/dev/null || true' EXIT\ndocker network create --internal dependency-test\ndocker run -d --name dependency-db --network dependency-test -e POSTGRES_PASSWORD=fixture -e POSTGRES_DB=nifty postgres:17-alpine\nfor attempt in $(seq 1 40); do docker exec dependency-db pg_isready -U postgres && break; sleep 2; done\ndocker run -d --name dependency-app --network dependency-test -e DATABASE_URL=postgres://postgres:fixture@dependency-db:5432/nifty -e JWT_SECRET=isolated-fixture-only -e NODE_ENV=production -e PORT=3000 -e HOST=0.0.0.0 dependency-check\nfor attempt in $(seq 1 40); do docker exec dependency-app curl -fsS http://127.0.0.1:3000/ && break; sleep 2; done\ndocker exec dependency-app curl -fsS http://127.0.0.1:3000/ | grep -qx OK\ndocker exec dependency-app curl -fsS http://127.0.0.1:3001/ | grep -qi '<!doctype html'\ndocker exec dependency-db psql -U postgres -d nifty -Atc \"SELECT count(*) FROM information_schema.tables WHERE table_name = 'user'\" | grep -qx 1\n",
-              },
-            ],
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
         },
+        {
+          "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "with": {
+            "node-version": "24"
+          }
+        },
+        {
+          "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+          "with": {
+            "bun-version": "1.4.3"
+          }
+        },
+        {
+          "run": "bun install --frozen-lockfile"
+        },
+        {
+          "run": "bun run check"
+        },
+        {
+          "run": "bun run test"
+        },
+        {
+          "run": "bun run build"
+        },
+        {
+          "run": "bun run check-types"
+        },
+        {
+          "name": "Build the exact deployment runtime",
+          "run": "docker build --pull -t dependency-check ."
+        },
+        {
+          "name": "Start the compiled deployment against isolated PostgreSQL",
+          "run": "set -eu\ntrap 'docker logs dependency-app 2>/dev/null || true; docker rm -f dependency-app dependency-db 2>/dev/null || true; docker network rm dependency-test 2>/dev/null || true' EXIT\ndocker network create --internal dependency-test\ndocker run -d --name dependency-db --network dependency-test -e POSTGRES_PASSWORD=fixture -e POSTGRES_DB=nifty postgres:17-alpine\nfor attempt in $(seq 1 40); do docker exec dependency-db pg_isready -U postgres && break; sleep 2; done\ndocker run -d --name dependency-app --network dependency-test -e DATABASE_URL=postgres://postgres:fixture@dependency-db:5432/nifty -e JWT_SECRET=isolated-fixture-only -e NODE_ENV=production -e PORT=3000 -e HOST=0.0.0.0 dependency-check\nfor attempt in $(seq 1 40); do docker exec dependency-app curl -fsS http://127.0.0.1:3000/ && break; sleep 2; done\ndocker exec dependency-app curl -fsS http://127.0.0.1:3000/ | grep -qx OK\ndocker exec dependency-app curl -fsS http://127.0.0.1:3001/ | grep -qi '<!doctype html'\ndocker exec dependency-db psql -U postgres -d nifty -Atc \"SELECT count(*) FROM information_schema.tables WHERE table_name = 'user'\" | grep -qx 1\n"
+        }
+      ]
     },
+    "verified-release-receipt": {
+      "name": "Verified release receipt",
+      "needs": "dependency-gate",
+      "if": "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref_name == github.event.repository.default_branch",
+      "runs-on": "ubuntu-latest",
+      "permissions": {
+        "contents": "write"
+      },
+      "env": {
+        "GH_TOKEN": "${{ github.token }}",
+        "GH_REPO": "${{ github.repository }}",
+        "COMMIT": "${{ github.sha }}"
+      },
+      "steps": [
+        {
+          "name": "Record the exact successful default-branch commit",
+          "run": "set -eu\ncase \"$COMMIT\" in *[!a-f0-9]*|'') exit 1;; esac\n[ \"${#COMMIT}\" -eq 40 ]\nref=\"homelab-verified-$COMMIT\"\nexisting=$(gh api \"repos/$GH_REPO/git/matching-refs/tags/$ref\" --jq \".[] | select(.ref == \\\"refs/tags/$ref\\\") | .object.sha\")\nif [ \"$existing\" = \"$COMMIT\" ]; then exit 0; fi\n[ -z \"$existing\" ]\ngh api --method POST \"repos/$GH_REPO/git/refs\" -f \"ref=refs/tags/$ref\" -f \"sha=$COMMIT\"\n"
+        }
+      ]
+    }
+  }
 }
