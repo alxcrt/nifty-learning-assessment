@@ -33,7 +33,7 @@
 		"sirv-cli": "^3.0.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.6.2",
+		"@biomejs/biome": "^2.6.3",
 		"husky": "^9.1.7",
 		"lint-staged": "^17.6.0",
 		"turbo": "^2.11.10"
